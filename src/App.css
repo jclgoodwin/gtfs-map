@@ -1,0 +1,80 @@
+body {
+  overflow: hidden;
+}
+
+a {
+  color: #54c;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+header {
+  background: #ffff9e;
+}
+
+header a {
+  display: inline-block;
+  padding: 12px 16px;
+  font-size: 24px;
+  color: #000;
+  text-decoration: none;
+}
+
+.App {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.maplibregl-map {
+  top: 52px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.sidebar {
+  background: #fff;
+  padding: 8px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  max-width: 400px;
+  max-height: calc(30vh - 84px);
+  overflow: auto;
+  z-index: 2;
+}
+
+.sidebar table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.sidebar th {
+  text-align: left;
+  padding-bottom: 4px;
+}
+
+.sidebar td a {
+  display: block;
+  padding: 4px 8px;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 1em;
+}
+
+.sidebar button {
+  background: none;
+  padding: 0;
+  border: 0;
+  float: right;
+  cursor: pointer;
+}
