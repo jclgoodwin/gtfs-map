@@ -1,7 +1,7 @@
 function Header({children}) {
   return (
     <header>
-      <a href="/">🍍 west midlands bus map</a>
+      <a href="/">🍍</a>
       {children}
     </header>
   );

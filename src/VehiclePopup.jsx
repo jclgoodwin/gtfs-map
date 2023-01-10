@@ -11,6 +11,7 @@ function VehiclePopup({ item, onClose }) {
       closeOnClick={false}
       onClose={onClose}
     >
+      {item.route_short_name}<br />
       🚍 {item.vehicle.vehicle.id}<br/>
       ⌚️ {when.toTimeString().slice(0, 9)}
     </Popup>

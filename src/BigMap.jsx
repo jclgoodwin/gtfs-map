@@ -26,7 +26,6 @@ function BigMap() {
 
   const [clickedVehicleId, setClickedVehicleId] = React.useState(null);
 
-
   const [cursor, setCursor] = React.useState(null);
 
   const onMouseEnter = React.useCallback(() => {
@@ -44,15 +43,16 @@ function BigMap() {
   };
 
   const loadVehicles = () => {
-    // setLoading(true);
-    let url = "/vehicle_positions.json";
+    setLoading(true);
+
+    let url = "https://gtfs.bustimes.org/vehicle_positions";
 
     fetch(url).then((response) => {
-      response.json().then((data) => {
+      response.json().then((items) => {
         setVehicles(
-          Object.assign({}, ...data.items.entity.map((item) => ({[item.id]: item})))
+          Object.assign({}, ...items.map((item) => ({[item.id]: item})))
         );
-        // setLoading(false);
+        setLoading(false);
       });
     });
   };
@@ -63,7 +63,7 @@ function BigMap() {
     let item = vehicles[clickedVehicleId];
 
     if (item && item.vehicle.trip) {
-      let url = `http://localhost:8001/tfwm/trips/${item.vehicle.trip.tripId}.json`;
+      let url = `https://gtfs.bustimes.org/tfwm/trips/${item.vehicle.trip.tripId}.json`;
 
       fetch(url).then((response) => {
         response.json().then((data) => {
@@ -82,28 +82,11 @@ function BigMap() {
   const vehiclesList = Object.values(vehicles);
   const clickedVehicle = clickedVehicleId ? vehicles[clickedVehicleId] : null;
 
-  const layerStyle = {
-    id: "vehicles",
-    type: "circle",
-    paint: {
-      "circle-color": "#9b1f20",
-      "circle-opacity": .6,
-      "circle-radius": 5,
-      // {
-      //   'base': 1.75,
-      //   'stops': [
-      //     [11, 2],
-      //     [22, 180]
-      //   ]
-      // },
-    },
-  };
-
   let clickedTrip = clickedVehicle && trip && clickedVehicle.vehicle.trip && clickedVehicle.vehicle.trip.tripId == trip.id && trip;
 
   return (
     <React.Fragment>
-      <Header>{clickedVehicleId}</Header>
+      <Header>{loading ? <progress /> : null}</Header>
       <Map
         initialViewState={{
           longitude: -2,
@@ -164,10 +147,14 @@ function BigMap() {
             })
           }}
         >
-          <Layer {...layerStyle} />
+          <Layer id="vehicles" type="circle" paint={{
+            "circle-color": "#9b1f20",
+            "circle-opacity": clickedTrip ? .4 : .6,
+            "circle-radius": 5
+          }} />
         </Source>
 
-        { clickedTrip ? <Source
+        { clickedTrip && trip.shape ? <Source
             type="geojson"
             data={{
               type: "Feature",
@@ -177,7 +164,7 @@ function BigMap() {
                 },
               }}
             >
-              <Layer type="line" paint={{ "line-width": 2, "line-color": "#9b1f20" }} />
+            <Layer type="line" paint={{ "line-width": 2, "line-color": "#9b1f20" }} />
           </Source>
         : null }
 
