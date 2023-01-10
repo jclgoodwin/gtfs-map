@@ -1,6 +1,8 @@
 import { Popup } from "react-map-gl";
 
 function VehiclePopup({ item, onClose }) {
+  let when = new Date(item.vehicle.timestamp * 1000);
+
   return (
     <Popup
       offset={8}
@@ -9,7 +11,8 @@ function VehiclePopup({ item, onClose }) {
       closeOnClick={false}
       onClose={onClose}
     >
-      {item.vehicle.vehicle.id}
+      🚍 {item.vehicle.vehicle.id}<br/>
+      ⌚️ {when.toTimeString().slice(0, 9)}
     </Popup>
   );
 }

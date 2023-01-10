@@ -7,6 +7,7 @@ import Map, {
   AttributionControl,
 } from "react-map-gl";
 
+import Header from "./Header";
 import Sidebar from "./Sidebar";
 import VehiclePopup from "./VehiclePopup";
 
@@ -78,8 +79,8 @@ function BigMap() {
     loadTrip();
   }, [clickedVehicleId]);
 
-  const vehiclesList = vehicles && Object.values(vehicles);
-  const clickedVehicle = clickedVehicleId && vehicles[clickedVehicleId];
+  const vehiclesList = Object.values(vehicles);
+  const clickedVehicle = clickedVehicleId ? vehicles[clickedVehicleId] : null;
 
   const layerStyle = {
     id: "vehicles",
@@ -87,18 +88,22 @@ function BigMap() {
     paint: {
       "circle-color": "#9b1f20",
       "circle-opacity": .6,
-      "circle-radius": {
-        'base': 1.75,
-        'stops': [
-          [11, 2],
-          [22, 180]
-        ]
-      },
+      "circle-radius": 5,
+      // {
+      //   'base': 1.75,
+      //   'stops': [
+      //     [11, 2],
+      //     [22, 180]
+      //   ]
+      // },
     },
   };
 
+  let clickedTrip = clickedVehicle && trip && clickedVehicle.vehicle.trip && clickedVehicle.vehicle.trip.tripId == trip.id && trip;
+
   return (
     <React.Fragment>
+      <Header>{clickedVehicleId}</Header>
       <Map
         initialViewState={{
           longitude: -2,
@@ -161,9 +166,25 @@ function BigMap() {
         >
           <Layer {...layerStyle} />
         </Source>
+
+        { clickedTrip ? <Source
+            type="geojson"
+            data={{
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                  coordinates: trip.shape
+                },
+              }}
+            >
+              <Layer type="line" paint={{ "line-width": 2, "line-color": "#9b1f20" }} />
+          </Source>
+        : null }
+
+
         <AttributionControl customAttribution="&copy; Ordnance Survey" />
       </Map>
-      { clickedVehicle ? <Sidebar item={clickedVehicle} trip={trip} onClose={() => setClickedVehicleId(null)} /> : null }
+      { clickedTrip ? <Sidebar item={clickedVehicle} trip={trip} onClose={() => setClickedVehicleId(null)} /> : null }
     </React.Fragment>
   );
 }

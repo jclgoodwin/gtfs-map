@@ -39,16 +39,46 @@ header a {
 }
 
 .sidebar {
-  background: #fff;
-  padding: 8px;
+  background: rgba(255, 255, 255, 0.95);
   position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
   max-width: 400px;
+  z-index: 2;
+  border-radius: 16px 16px 0 0;
+}
+
+.sidebar-header {
+  padding: 16px;
+  padding-bottom: 0;
+  border-bottom: 1px solid #eee;
+}
+
+.sidebar h2 {
+  margin: 0 0 16px;
+  font-size: 1em;
+}
+
+.sidebar button {
+  background: none;
+  border: 0;
+  font: inherit;
+  float: right;
+  cursor: pointer;
+  padding: 16px;
+  margin: -16px -16px 0 0;
+}
+
+.sidebar button:hover {
+  text-decoration: underline;
+}
+
+.sidebar-trip-timetable {
   max-height: calc(30vh - 84px);
   overflow: auto;
-  z-index: 2;
+  padding: 8px;
+
 }
 
 .sidebar table {
@@ -66,15 +96,6 @@ header a {
   padding: 4px 8px;
 }
 
-.sidebar h2 {
-  margin-top: 0;
-  font-size: 1em;
-}
-
-.sidebar button {
-  background: none;
-  padding: 0;
-  border: 0;
-  float: right;
-  cursor: pointer;
+.sidebar .minor {
+  font-size: 12px;
 }

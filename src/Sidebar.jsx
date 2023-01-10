@@ -1,6 +1,19 @@
 import { useState, useEffect } from "react";
 
 
+function Row({time, currentStopSequence}) {
+  let current = currentStopSequence === time.sequence;
+
+  return (
+    <tr className={ time.timepoint ? null : 'minor' }>
+      <td><a href={`https://bustimes.org/stops/${time.stop_code}`} target='_blank'>{time.stop_name}</a></td>
+      <td>{time.arrival_time}</td>
+      { current ? <td>🚍</td> : null}
+    </tr>
+  );
+}
+
+
 function Sidebar({ item, trip, onClose }) {
   if (!trip || !item.vehicle.trip || trip.id != item.vehicle.trip.tripId) {
     return null;
@@ -8,10 +21,11 @@ function Sidebar({ item, trip, onClose }) {
 
   return (
     <div className="sidebar">
-      <button onClick={onClose}>Close &times;</button>
-      <h2>{trip.route_short_name} to {trip.headsign}</h2>
-      <p>{item.vehicle.vehicle.id}</p>
-      {trip ? 
+      <div className="sidebar-header">
+        <button onClick={onClose}>Close &times;</button>
+        <h2>{trip.route_short_name} to {trip.headsign}</h2>
+      </div>
+      <div className="sidebar-trip-timetable">
         <table>
           <thead>
             <tr>
@@ -20,16 +34,10 @@ function Sidebar({ item, trip, onClose }) {
             </tr>
           </thead>
           <tbody>
-            {trip.times.map(time => {
-              return <tr key={time.sequence}>
-                <td><a href={`https://bustimes.org/stops/${time.stop_code}`} target='_blank'>{time.stop_name}</a></td>
-                <td>{time.arrival_time}</td>
-              </tr>;
-            })}
+            {trip.times.map(time => <Row key={time.sequence} time={time} currentStopSequence={item.vehicle.currentStopSequence} />)}
           </tbody>
         </table>
-        : null }
-      {/* JSON.stringify(item) */}
+      </div>
     </div>
   );
 }
