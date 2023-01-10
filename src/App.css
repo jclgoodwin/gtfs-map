@@ -96,6 +96,7 @@ header a {
   padding: 4px 8px;
 }
 
-.sidebar .minor {
+.sidebar .minor,
+.sidebar-trip-timetable th {
   font-size: 12px;
 }

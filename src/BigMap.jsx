@@ -22,8 +22,6 @@ function BigMap() {
 
   const [loading, setLoading] = React.useState(false);
 
-  const [vehiclePositions, setVehiclePositions] = React.useState(null);
-
   const [clickedVehicleId, setClickedVehicleId] = React.useState(null);
 
   const [cursor, setCursor] = React.useState(null);
@@ -59,8 +57,11 @@ function BigMap() {
 
   const [trip, setTrip] = React.useState();
 
+  const vehiclesList = Object.values(vehicles);
+  const clickedVehicle = clickedVehicleId ? vehicles[clickedVehicleId] : null;
+
   const loadTrip = () => {
-    let item = vehicles[clickedVehicleId];
+    let item = clickedVehicle;
 
     if (item && item.vehicle.trip) {
       let url = `https://gtfs.bustimes.org/tfwm/trips/${item.vehicle.trip.tripId}.json`;
@@ -74,15 +75,10 @@ function BigMap() {
   };
 
   // Similar to componentDidMount and componentDidUpdate:
-  React.useEffect(() => {
-    // Update the document title using the browser API
-    loadTrip();
-  }, [clickedVehicleId]);
+  React.useEffect(loadTrip, [clickedVehicle]);
 
-  const vehiclesList = Object.values(vehicles);
-  const clickedVehicle = clickedVehicleId ? vehicles[clickedVehicleId] : null;
 
-  let clickedTrip = clickedVehicle && trip && clickedVehicle.vehicle.trip && clickedVehicle.vehicle.trip.tripId == trip.id && trip;
+  let clickedTrip = clickedVehicle && trip && clickedVehicle.vehicle.trip && clickedVehicle.vehicle.trip.tripId === trip.id;
 
   return (
     <React.Fragment>
