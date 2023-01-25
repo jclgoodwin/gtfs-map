@@ -82,7 +82,7 @@ function BigMap() {
   };
 
   // Similar to componentDidMount and componentDidUpdate:
-  React.useEffect(loadTrip, [clickedVehicle]);
+  React.useEffect(loadTrip, [dataset, clickedVehicle]);
 
   let clickedTrip = clickedVehicle && trip && clickedVehicle.vehicle.trip && clickedVehicle.vehicle.trip.tripId === trip.id;
 
@@ -120,7 +120,7 @@ function BigMap() {
           };
         }}
 
-        interactiveLayerIds={['vehicles']}
+        interactiveLayerIds={vehiclesList.length ? ['vehicles'] : []}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onClick={onClick}
