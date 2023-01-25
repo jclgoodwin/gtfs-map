@@ -67,7 +67,7 @@ function BigMap() {
   const vehiclesList = Object.values(vehicles);
   const clickedVehicle = clickedVehicleId ? vehicles[clickedVehicleId] : null;
 
-  const loadTrip = (dataset) => {
+  const loadTrip = () => {
     let item = clickedVehicle;
 
     if (item && item.vehicle.trip) {
