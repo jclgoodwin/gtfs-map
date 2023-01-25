@@ -17,10 +17,15 @@ import maplibregl from "!maplibre-gl";
 import maplibreglWorker from "maplibre-gl/dist/maplibre-gl-csp-worker";
 maplibregl.workerClass = maplibreglWorker;
 
+const root = "https://gtfs.bustimes.org";
+// const root = "http://localhost:8001";
+
 function BigMap() {
   const [vehicles, setVehicles] = React.useState({});
 
   const [loading, setLoading] = React.useState(false);
+
+  const [dataset, setDataset] = React.useState("tfwm");
 
   const [clickedVehicleId, setClickedVehicleId] = React.useState(null);
 
@@ -43,28 +48,30 @@ function BigMap() {
   const loadVehicles = () => {
     setLoading(true);
 
-    let url = "https://gtfs.bustimes.org/vehicle_positions";
+    let url = `${root}/${dataset}/vehicle_positions`;
 
     fetch(url).then((response) => {
       response.json().then((items) => {
         setVehicles(
-          Object.assign({}, ...items.map((item) => ({[item.id]: item})))
+          Object.assign({}, ...items.map((item) => ({[parseInt(item.id)]: item})))
         );
         setLoading(false);
       });
     });
   };
 
+  React.useEffect(loadVehicles, [dataset]);
+
   const [trip, setTrip] = React.useState();
 
   const vehiclesList = Object.values(vehicles);
   const clickedVehicle = clickedVehicleId ? vehicles[clickedVehicleId] : null;
 
-  const loadTrip = () => {
+  const loadTrip = (dataset) => {
     let item = clickedVehicle;
 
     if (item && item.vehicle.trip) {
-      let url = `https://gtfs.bustimes.org/tfwm/trips/${item.vehicle.trip.tripId}.json`;
+      let url = `${root}/${dataset}/trips/${item.vehicle.trip.tripId}.json`;
 
       fetch(url).then((response) => {
         response.json().then((data) => {
@@ -77,12 +84,18 @@ function BigMap() {
   // Similar to componentDidMount and componentDidUpdate:
   React.useEffect(loadTrip, [clickedVehicle]);
 
-
   let clickedTrip = clickedVehicle && trip && clickedVehicle.vehicle.trip && clickedVehicle.vehicle.trip.tripId === trip.id;
 
   return (
     <React.Fragment>
-      <Header>{loading ? <progress /> : null}</Header>
+      <Header>
+        {loading ? <progress /> : null}
+        <select value={dataset} onChange={(e) => setDataset(e.target.value)}>
+          <option>gb</option>
+          <option>tfwm</option>
+          <option>ea</option>
+        </select>
+      </Header>
       <Map
         initialViewState={{
           longitude: -2,
